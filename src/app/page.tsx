@@ -1,9 +1,13 @@
 "use client";
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Home() {
+  const test = useSession();
   const { data: session } = useSession();
+  console.log(session, test);
+  // session.statusに、ログインしているかどうかのステータスを持っている
+
   return (
     <>
       <p>
@@ -12,7 +16,14 @@ export default function Home() {
         <code>{session?.user?.name ?? "guest"}</code>
         <code>{session?.user?.email ?? "guest@test.jp"}</code>
       </p>
-      {!session && <button onClick={() => signIn("github")}>sign in</button>}
+      {session ? (
+        <button onClick={() => signOut()}>sign out</button>
+      ) : (
+        <>
+          <button onClick={() => signIn("github")}>github sign in</button>
+          <button onClick={() => signIn("google")}>google sign in</button>
+        </>
+      )}
     </>
   );
 }
